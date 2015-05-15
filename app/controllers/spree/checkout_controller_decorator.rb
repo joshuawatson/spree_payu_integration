@@ -1,31 +1,34 @@
 Spree::CheckoutController.class_eval do
 
-  before_filter :pay_with_payu, only: :update
+  before_action :pay_with_payu, only: :update
 
   private
 
   def pay_with_payu
     return unless params[:state] == 'payment'
-
+    return if params[:order].blank? || params[:order][:payments_attributes].blank?
     pm_id = params[:order][:payments_attributes].first[:payment_method_id]
     payment_method = Spree::PaymentMethod.find(pm_id)
 
     if payment_method && payment_method.kind_of?(Spree::PaymentMethod::Payu)
       params = PayuOrder.params(@order, request.remote_ip, order_url(@order), payu_notify_url, order_url(@order))
-      response = OpenPayU::Order.create(params)
-
-      case response.status['status_code']
-      when 'SUCCESS'
-        persist_user_address
-        payment_success(payment_method)
-        redirect_to response.redirect_uri
-      else
-        payu_error
-      end
+       
+    redirect_to  payu_pay_you_money_path(hash: hash,order: @order,params: params)
+      
+      # case response.status['status_code']
+      # when 'SUCCESS'
+      #   p "SUCCESS"
+      #   # persist_user_address
+      #   redirect_to response.redirect_uri if payment_success(payment_method)
+      # else
+      #   p "error"
+      #   payu_error
+      # end
     end
 
   rescue StandardError => e
     payu_error(e)
+    p "====================#{e}======"
   end
 
   def payment_success(payment_method)

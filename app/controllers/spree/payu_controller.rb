@@ -19,5 +19,15 @@ module Spree
 
       render json: OpenPayU::Order.build_notify_response(response.req_id)
     end
+
+    def pay_you_money
+    @name = "#{params[:buyer][:first_name]}".strip  
+     p "=========================#{"#{params[:merchant_pos_id]}|#{params[:order]}|#{params[:total_amount]}|Prpduct Information|#{@name}|#{params[:buyer][:email]}|15|||||||||||eCwWELxi"}"
+     @random = SecureRandom.hex
+     p "=======@random====#{@random}"
+     hash = Digest::SHA2.new(512).hexdigest("#{params[:merchant_pos_id]}|#{@random}|#{params[:total_amount]}|Prpduct Information|#{@name}|#{params[:buyer][:email]}|15|||||||||||salt")
+     p "hash====#{hash}"
+     p "params[:order]-===================#{params[:order]}"
+    end
   end
 end
