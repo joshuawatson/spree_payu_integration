@@ -1,0 +1,44 @@
+<div><b>You will be redirected to PayU Money in a few seconds</b><div>
+
+<% hash = Digest::SHA2.new(512).hexdigest("#{params[:merchant_pos_id]}|#{@random}|#{params[:total_amount]}|Prpduct Information|#{@name}|#{params[:buyer][:email]}|||||||||||salt")%>
+
+<%= @random%>
+<% name = "#{params[:buyer][:first_name]}".strip %>
+<form action="https://test.payu.in/_payment.php"
+id="payumoney_shared_money" name="payumoney_shared_money"
+method="POST">
+<input id="key" name="key" value="<%=params[:merchant_pos_id]%>"
+type="hidden">
+<input id="txnid" name="txnid" value="<%= @random%>" type="hidden">
+<input id="amount" name="amount" value="<%= params[:total_amount]%>" type="hidden">
+<input id="productinfo" name="productinfo" value="Prpduct Information"
+type="hidden">
+<input id="firstname" name="firstname" value="<%= @name %>" type="hidden">
+<input id="Lastname" name="Lastname" value="<%= params[:buyer][:last_name]%>" type="hidden">
+<input id="City" name="City" value="<%= params[:buyer][:delivery][:city]%>" type="hidden">
+<input id="State" name="State" value="<%= params[:buyer][:delivery][:city]%>" type="hidden">
+<input id="Country" name="Country" value="<%= params[:buyer][:delivery][:country_code]%>" type="hidden">
+<input id="Zipcode" name="Zipcode" value="<%= params[:buyer][:delivery][:postal_code]%>" type="hidden">
+<input id="email" name="email" value="<%= params[:buyer][:email]%>" type="hidden">
+<input id="phone" name="phone" value="<%= params[:buyer][:phone]%>" type="hidden">
+<input id="surl" name="surl"
+value="<%= params[:continue_url]%>"
+type="hidden">
+<input id="furl" name="furl"
+value="<%= params[:notify_url]%>"
+type="hidden">
+<!-- <input id="bankcode" name="bankcode" value="PAYUW" type="hidden"> -->
+<!-- <input id="Pg" name="Pg" value="Wallet" type="hidden"> -->
+<!-- <input id="udf1" name="udf1" value="15" type="hidden"> -->
+<input id="Hash" name="Hash" value="<%= hash%>" type="hidden">
+<!-- <input type="submit">
+ -->
+ </form>
+<script type="text/javascript">
+function formsubmit()
+{
+// document.redirect.submit();
+document.payumoney_shared_money.submit();
+}
+setTimeout("formsubmit()", 1);
+</script>
